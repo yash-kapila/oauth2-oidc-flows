@@ -1,0 +1,22 @@
+{
+  "name": "implicit-flow",
+  "version": "1.0.0",
+  "description": "NodeJS app to demonstrate OAuth 2.0 Implicit Flow",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "watch": "nodemon src/index.js"
+  },
+  "keywords": [
+    "oauth"
+  ],
+  "author": "Yash Kapila",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}

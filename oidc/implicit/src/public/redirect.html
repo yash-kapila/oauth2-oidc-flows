@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Implicit Flow</title>
+</head>
+<body>
+  <header>
+    <h1>Redirect Page</h1>
+  </header>
+
+  <main>
+    <div id="details"></div>
+
+    <button id="btn" onclick="showProfile()">Show My Profile</button>
+
+    <div id="profile"></div>
+  </main>
+
+  <script>
+    const detailsContainer = document.getElementById('details');
+    const hashFragments = window.location.hash.substring(1).split('&');
+
+    for (const item of hashFragments) {
+      const [ name, value ] = item.split('=');
+
+      const details = document.createElement('div');
+      const labelNode = document.createElement('h3');
+      const valueNode = document.createElement('p');
+
+      labelNode.textContent = name;
+      valueNode.textContent = value;
+
+      details.appendChild(labelNode);
+      details.appendChild(valueNode);
+      detailsContainer.appendChild(details);
+    }
+
+    function showProfile() {
+      const accessToken = window.location.hash.substring(1).split('&')[0].split('=')[1];
+      fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`)
+        .then(response => response.json())
+        .then(data => {
+          const profileContainer = document.getElementById('profile');
+          profileContainer.textContent = JSON.stringify(data);
+        })
+        .catch(err => {
+          const profileContainer = document.getElementById('profile');
+          profileContainer.textContent = JSON.stringify(err);
+        });
+    }
+  </script>
+</body>
+</html>

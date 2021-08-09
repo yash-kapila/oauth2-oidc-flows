@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorization Code Flow</title>
+</head>
+<body>
+  <header>
+    <h1>Authorisation Code Flow Login</h1>
+  </header>
+
+  <main>
+    <a id="login">
+      Login with Google
+    </a>
+
+    <br><br>
+
+    <button id="btn" onclick="showProfile()">Show My Profile</button>
+
+    <div id="profile"></div>
+  </main>
+
+  <script>
+    // Google provided OAuth url
+    const oAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+    // Client ID generated as a prerequisite step
+    const clientId = '497369248462-huli8sh9cu609sdtjvn44p8i5jfnh8rt.apps.googleusercontent.com';
+    // This response type informs Google that expected flow is an Authorization Code Flow
+    const responseType = 'code';
+    // Redirect URI informs google to perform a redirect to this URL after successful authorization process
+    const redirectUri = 'http://localhost:3000/oauth/redirect';
+    // Scope determines level of access provided to this client app which in this example is a basic user profile
+    // Possible scopes are: https://developers.google.com/identity/protocols/oauth2/scopes
+    const scope = 'openid';
+
+    const loginLink = document.getElementById('login');
+    const loginHref = oAuthUrl.concat(
+      '?',
+      'response_type=',
+      responseType,
+      '&client_id=',
+      clientId,
+      '&redirect_uri=',
+      redirectUri,
+      '&scope=',
+      scope,
+      // This returns refresh token too in the second request
+      '&access_type=offline',
+
+    );
+
+    loginLink.setAttribute('href', loginHref);
+
+    function showProfile() {
+      const accessToken = window.location.hash.substring(1).split('&')[0].split('=')[1];
+      fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`)
+        .then(response => response.json())
+        .then(data => {
+          const profileContainer = document.getElementById('profile');
+          profileContainer.textContent = JSON.stringify(data);
+        })
+        .catch(err => {
+          const profileContainer = document.getElementById('profile');
+          profileContainer.textContent = JSON.stringify(err);
+        });
+    }
+  </script>
+</body>
+</html>
